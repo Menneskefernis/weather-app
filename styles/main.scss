@@ -50,3 +50,22 @@ table {
 * {
   box-sizing: border-box;
 }
+
+body {
+	background-image: linear-gradient(to right, steelblue, lightskyblue);
+}
+
+#content-wrapper {
+	text-align: center;
+	padding: 50px;
+
+	h1 {
+		font-size: 50px;
+	}
+
+	img {
+		border-radius: 50%;
+	}
+	
+}
+
