@@ -1,3 +1,4 @@
+const form = document.querySelector('form');
 const weatherGIF = document.getElementById('weather-gif');
 const details = document.getElementById('details');
 
@@ -21,7 +22,7 @@ async function getGIF(query) {
   }
 }
 
-async function handleWeatherData(weatherData) {
+async function sortWeatherData(weatherData) {
   const data = await weatherData;
   const sortedData =  {
                         weather: data.weather[0].description,
@@ -43,15 +44,25 @@ async function renderWeatherData(data) {
     <p>${weatherData.humidity}% Humidity</p>
     <p>${weatherData.windSpeed} Wind Speed</p>
     <div>
-      <p>${weatherData.temperature} Cold</p>
-      <p>${weatherData.maxTemperature}</p>
-      <p>${weatherData.minTemperature}</p>
+      <p>${weatherData.temperature} Degrees</p>
+      <p>Maximum ${weatherData.maxTemperature} Degrees</p>
+      <p>Minimum ${weatherData.minTemperature} Degrees</p>
     </div>
   `
   details.insertAdjacentHTML('afterbegin', markup);
   getGIF(weatherData.weather);
 }
 
-const weatherData = getWeatherData('petersburg');
-const sortedWeatherData = handleWeatherData(weatherData);
-renderWeatherData(sortedWeatherData);
+function handleSubmit(e) {
+  e.preventDefault();
+  const location = form.location.value;
+  
+  const weatherData = getWeatherData(location);
+  const sortedWeatherData = sortWeatherData(weatherData);
+  renderWeatherData(sortedWeatherData);
+  console.log(form.location.value)
+}
+
+
+
+form.addEventListener('click', handleSubmit);

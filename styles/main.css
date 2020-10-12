@@ -63,6 +63,7 @@ body {
 }
 
 #content-wrapper {
+  position: relative;
   text-align: center;
   padding: 50px;
 }
@@ -72,6 +73,9 @@ body {
 }
 
 #content-wrapper img {
+  position: absolute;
+  top: calc(50vh - 250px);
+  left: calc(50vw - 250px);
   border-radius: 50%;
 }
 /*# sourceMappingURL=main.css.map */
