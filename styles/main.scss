@@ -62,6 +62,10 @@ body {
 
 	h1 {
 		font-size: 50px;
+		position: absolute;
+		top: 15%;
+		left: calc(50% - 600px);
+		width: 1200px;
 	}
 
 	img {
@@ -69,6 +73,39 @@ body {
 		top: calc(50vh - 250px);
 		left: calc(50vw - 250px);
 		border-radius: 50%;
+		border: none;
+	}
+
+	#details {
+		height: calc(100vh - 200px);
+		position: relative;
+		font-size: 35px;
+		font-family: 'Architects Daughter', cursive;
+		
+		#weather {
+			position: absolute;
+			top: 20%;
+			left: 10%;
+		}
+		
+		#temperature {
+			position: absolute;
+			bottom: 5%;
+			left: 70%;
+			line-height: 2;
+		}
+
+		#humidity {
+			position: absolute;
+			top: 40%;
+			right: 10%;
+		}
+
+		#wind-speed {
+			position: absolute;
+			top: 60%;
+			left: 5%;
+		}
 	}
 	
 }
