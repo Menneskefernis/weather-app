@@ -59,20 +59,80 @@ body {
 	position: relative;
 	text-align: center;
 	padding: 50px;
+	font-family: Arial, Helvetica, sans-serif;
 
 	#crazymode {
 		position: absolute;
 		top: 10px;
 		right: 10px;
+		padding-right: 50px;
+		padding-top: 10px;
 
 		input {
-			transform: scale(2);
+			position: absolute;
+			opacity: 0;
+			cursor: pointer;
+			height: 0;
+			width: 0;
+		}
+
+		input:checked ~ .checkmark:after {
+			display: block;
+		}
+
+		.checkmark {
+			position: absolute;
+			top: 0;
+			right: 0;
+			height: 40px;
+			width: 40px;
+			background: steelblue;
+			border-radius: 4px;
+			cursor: pointer;
+			
+			&:after {
+				content: "";
+				position: absolute;
+				display: none;
+				left: 13px;
+				top: 4px;
+				width: 10px;
+				height: 20px;
+				border: solid white;
+				border-width: 0 6px 6px 0;
+				-webkit-transform: rotate(45deg);
+				-ms-transform: rotate(45deg);
+				transform: rotate(45deg);
+			}
+		}
+	}
+
+
+
+	form {
+		margin-top: 10px;
+		
+		& * {
+			height: 32px;
+			border: none;
+			border-radius: 4px;
+		}
+
+		button {
+			color: #fff;
+			background: steelblue;
+			margin-left: 10px;
+			font-weight: bold;
+		}
+
+		input {
+			padding: 0 7px;
+			font-size: 16px;
 		}
 	}
 
 	h1 {
-		font-family: Arial, Helvetica, sans-serif;
-		font-size: 50px;
+		font-size: 40px;
 		position: absolute;
 		top: 15%;
 		left: calc(50% - 600px);

@@ -40,30 +40,32 @@ async function sortWeatherData(weatherData) {
   return sortedData;  
 }
 
-async function renderWeatherData(data, crazyMode=true) {
+async function renderWeatherData(data, crazyMode=false) {
   const weatherData = await data;
   
   markup = `
     <h2 id="weather">${weatherData.weather.toUpperCase()}</h2>
     <p id="humidity">${weatherData.humidity}% Humidity</p>
-    <p id="wind-speed">${weatherData.windSpeed} ${setUnits(crazyMode).speed}</p>
+    <p id="wind-speed">${weatherData.windSpeed} ${getUnits(crazyMode).speed}</p>
     <div id="temperature">
-      <p>${weatherData.temperature} ${setUnits(crazyMode).tempUnit}</p>
-      <p>Maximum ${weatherData.maxTemperature} ${setUnits(crazyMode).tempUnit}</p>
-      <p>Minimum ${weatherData.minTemperature} ${setUnits(crazyMode).tempUnit}</p>
+      <p>${weatherData.temperature} ${getUnits(crazyMode).tempUnit}</p>
+      <p>Maximum ${weatherData.maxTemperature} ${getUnits(crazyMode).tempUnit}</p>
+      <p>Minimum ${weatherData.minTemperature} ${getUnits(crazyMode).tempUnit}</p>
     </div>
   `
   details.innerHTML = markup;
   getGIF(weatherData.weather);
 }
 
-function setUnits(crazyMode=false) {
+function getUnits(crazyMode=false) {
   const units = {}
   if (crazyMode) {
+    units.mode = 'imperial';
     units.speed = 'mph';
     units.tempUnit = '°f';
   } else {
-    units.speed = 'km/h';
+    units.mode = 'metric';
+    units.speed = 'm/s';
     units.tempUnit = '°c';
   }
   return units;
@@ -73,14 +75,12 @@ async function handleSubmit(e) {
   e.preventDefault();
   if (!form.location.value) return;
 
-  if (crazyModeCheckbox.checked) console.log('true')
-
   const location = form.location.value;
-  const weatherData = getWeatherData(location);
+  const weatherData = getWeatherData(location, getUnits(crazyModeCheckbox.checked).mode);
   const sortedWeatherData = await sortWeatherData(weatherData);
   locationTitle.innerHTML = sortedWeatherData.city;
-  renderWeatherData(sortedWeatherData);
+  renderWeatherData(sortedWeatherData, crazyModeCheckbox.checked);
 }
 
 form['submit-btn'].addEventListener('click', handleSubmit);
-crazyModeCheckbox.addEventListener('click', handleSubmit);
+crazyModeCheckbox.addEventListener('change', handleSubmit);
