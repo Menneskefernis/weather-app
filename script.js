@@ -1,17 +1,23 @@
 const form = document.querySelector('form');
+const title = document.getElementById('title');
 const locationTitle = document.getElementById('location-title');
 const weatherGIF = document.getElementById('weather-gif');
 const details = document.getElementById('details');
-const crazyModeCheckbox = document.querySelector('#crazymode input');
+const crazyModeBtn = document.getElementById('crazymode-btn');
+const error = document.querySelector('.error');
 
 const API_KEY = 'c55366a475f8035580969e98a3d013b8';
 
-async function getWeatherData(city, units='metric') {
- 
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${units}&appid=${API_KEY}`, {mode: 'cors'});
+let queryLocation;
+
+async function getWeatherData(location, units='metric') {
+  try {
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&units=${units}&appid=${API_KEY}`, {mode: 'cors'});
     const weatherData = await response.json();
-    console.log(weatherData)
     return weatherData;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 async function getGIF(query) {
@@ -20,15 +26,16 @@ async function getGIF(query) {
     const imgData = await response.json();       
     weatherGIF.src = imgData.data.images.original.url;
   } catch(err) {
-    console.log(err)
+    alert(err)
   }
 }
 
 async function sortWeatherData(weatherData) {
+  
   const data = await weatherData;
-  console.log(data.name)
+  
   const sortedData =  {
-                        city: `${data.name} (${data.sys.country})`,
+                        city: `${data.name} ${data.sys.country ? `(${data.sys.country})` : ''} `,
                         weather: data.weather[0].description,
                         humidity: data.main.humidity,
                         windSpeed: data.wind.speed,
@@ -36,7 +43,7 @@ async function sortWeatherData(weatherData) {
                         maxTemperature: data.main.temp_max,
                         minTemperature: data.main.temp_min,
                       };
-
+  
   return sortedData;  
 }
 
@@ -46,7 +53,7 @@ async function renderWeatherData(data, crazyMode=false) {
   markup = `
     <h2 id="weather">${weatherData.weather.toUpperCase()}</h2>
     <p id="humidity">${weatherData.humidity}% Humidity</p>
-    <p id="wind-speed">${weatherData.windSpeed} ${getUnits(crazyMode).speed}</p>
+    <p id="wind-speed">${weatherData.windSpeed} ${getUnits(crazyMode).speed} wind</p>
     <div id="temperature">
       <p>${weatherData.temperature} ${getUnits(crazyMode).tempUnit}</p>
       <p>Maximum ${weatherData.maxTemperature} ${getUnits(crazyMode).tempUnit}</p>
@@ -54,33 +61,64 @@ async function renderWeatherData(data, crazyMode=false) {
     </div>
   `
   details.innerHTML = markup;
-  getGIF(weatherData.weather);
+  getGIF(weatherData.weather);  
 }
 
 function getUnits(crazyMode=false) {
-  const units = {}
+  let units = {}
   if (crazyMode) {
-    units.mode = 'imperial';
-    units.speed = 'mph';
-    units.tempUnit = '°f';
+    units = {
+      mode: 'imperial',
+      speed: 'mph',
+      tempUnit: '°f',
+    }
   } else {
-    units.mode = 'metric';
-    units.speed = 'm/s';
-    units.tempUnit = '°c';
+    units = {
+      mode: 'metric',
+      speed: 'm/s',
+      tempUnit: '°c',
+    }
   }
   return units;
 }
 
 async function handleSubmit(e) {
   e.preventDefault();
-  if (!form.location.value) return;
+  if (!form.location.value && !queryLocation) return;
 
-  const location = form.location.value;
-  const weatherData = getWeatherData(location, getUnits(crazyModeCheckbox.checked).mode);
-  const sortedWeatherData = await sortWeatherData(weatherData);
-  locationTitle.innerHTML = sortedWeatherData.city;
-  renderWeatherData(sortedWeatherData, crazyModeCheckbox.checked);
+  const isCrazyModeEnabled = crazyModeBtn.classList.contains('enabled');
+  if (e.target.name === 'submit-btn') queryLocation = form.location.value;
+
+  try {
+    const weatherData = getWeatherData(queryLocation, getUnits(isCrazyModeEnabled).mode);
+    const sortedWeatherData = await sortWeatherData(weatherData);
+    locationTitle.innerHTML = sortedWeatherData.city;
+    removeErrorMessage();
+    renderWeatherData(sortedWeatherData, isCrazyModeEnabled);
+    form.reset();
+  } catch (err) {
+    if (err instanceof TypeError) {
+      showErrorMessage();
+      weatherGIF.src = 'https://media.giphy.com/media/vKz8r5aTUFFJu/giphy.gif';
+    }
+  }
+}
+
+function showErrorMessage() {
+  title.classList.remove('display');
+  error.classList.add('display');
+}
+
+function removeErrorMessage() {
+  title.classList.add('display');
+  error.classList.remove('display');
+}
+
+function toggleCrazyMode(e) {
+  e.preventDefault();
+  e.target.classList.toggle('enabled');
+  handleSubmit(e);
 }
 
 form['submit-btn'].addEventListener('click', handleSubmit);
-crazyModeCheckbox.addEventListener('change', handleSubmit);
+crazyModeBtn.addEventListener('click', toggleCrazyMode);

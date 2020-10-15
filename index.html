@@ -10,16 +10,17 @@
 </head>
 <body>
   <div id="content-wrapper">
-    <label id="crazymode">CrazyMode
-      <input type="checkbox"><span class="checkmark"></span>
-    </label>
+    <button id="crazymode-btn" name="crazymode-btn">CrazyMode</button>
     <h2>Search for a location:</h2>
     <form>
       <input type="text" name="location">
       <button type="submit" name="submit-btn">SEARCH</button>
     </form>
-    <h1>In <span id="location-title">...</span> the weather is...</h1>
-    <img id="weather-gif" src="https://media.giphy.com/media/1uLQUtPLbJMQ0/giphy.gif" width="500" height="500" alt="">
+    <h1 id="title" class="display">In <span id="location-title">...</span> the weather is...</h1>
+    <p class="error">Location not found</p>
+    <div id="image-container">
+      <img id="weather-gif" src="https://media.giphy.com/media/1uLQUtPLbJMQ0/giphy.gif" alt="">
+    </div>
     <div id="details"></div>
   </div>
   <script src="./script.js"></script>
