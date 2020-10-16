@@ -109,6 +109,10 @@ button {
 			&:hover {
 				background: skyblue;
 			}
+
+			&:active {
+				background: darken(skyblue, 5%);
+			}
 		}
 
 		input {
@@ -142,8 +146,6 @@ button {
 		left: calc(50vw - 250px);
 		width: 500px;
 		height: 500px;
-		-moz-box-shadow:    inset 0 0 10px #000000;
-		-webkit-box-shadow: inset 0 0 10px #000000;
 		box-shadow: 0 0 20px #fff;
 		
 		img {
@@ -154,8 +156,6 @@ button {
 
 		}
 	}
-
-
 
 	#details {
 		height: calc(100vh - 200px);

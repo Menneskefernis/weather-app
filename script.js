@@ -26,7 +26,7 @@ async function getGIF(query) {
     const imgData = await response.json();       
     weatherGIF.src = imgData.data.images.original.url;
   } catch(err) {
-    alert(err)
+    console.log(err);
   }
 }
 
@@ -85,7 +85,7 @@ function getUnits(crazyMode=false) {
 async function handleSubmit(e) {
   e.preventDefault();
   if (!form.location.value && !queryLocation) return;
-
+  if (e.target.name === 'submit-btn' && !form.location.value) return;
   const isCrazyModeEnabled = crazyModeBtn.classList.contains('enabled');
   if (e.target.name === 'submit-btn') queryLocation = form.location.value;
 
@@ -117,7 +117,7 @@ function removeErrorMessage() {
 function toggleCrazyMode(e) {
   e.preventDefault();
   e.target.classList.toggle('enabled');
-  handleSubmit(e);
+  if (queryLocation) handleSubmit(e);
 }
 
 form['submit-btn'].addEventListener('click', handleSubmit);
